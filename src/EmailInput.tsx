@@ -1,7 +1,8 @@
 import React from 'react';
 
 type EmailInputProps = {
-    addEmail: (email: string) => void;
+    addEmail: (email: string, index: number) => void;
+    index: number;
 }
 
 type EmailInputState = {
@@ -26,7 +27,7 @@ export default class EmailInput extends React.Component<EmailInputProps, EmailIn
             email: event.target.value,
         });
 
-        this.props.addEmail(event.target.value);
+        this.props.addEmail(event.target.value, this.props.index);
     }
 
     render() {

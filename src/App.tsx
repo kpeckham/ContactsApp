@@ -65,7 +65,6 @@ class App extends React.Component<ContactProps, ContactState> {
   }
 
   render() {
-    console.log(this.state.contacts);
     console.log(this.state.selectedContact);
     return (
       <div className="App">
