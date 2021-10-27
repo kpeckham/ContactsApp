@@ -4,6 +4,7 @@ import EmailInput from './EmailInput'
 type DetailsProps = {
     contact: any;
     selected: number | null;
+    updateCallback: () => void;
 }
 
 type DetailsState = {
@@ -47,8 +48,7 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
         });
     }
 
-    handleSubmit(event: any) {
-        event.preventDefault();
+    handleSubmit() {
 
         if (this.state.firstName === '' || this.state.lastName === '') {
             alert("Please enter a first name and last name!");
@@ -69,21 +69,40 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
             "emails": filteredEmails.concat(this.state.newEmails),
         };
 
-        fetch('https://avb-contacts-api.herokuapp.com/contacts/' + this.props.contact.id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(contactData),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-
+        if (this.props.contact.id !== null) {
+            fetch('https://avb-contacts-api.herokuapp.com/contacts/' + this.props.contact.id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(contactData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .then(() => this.props.updateCallback())
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        else {
+            fetch('https://avb-contacts-api.herokuapp.com/contacts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(contactData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .then(() => this.props.updateCallback())
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
         return true;
         
     }
@@ -133,6 +152,7 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
             body: null,
         })
         .then(response => console.log(response))
+        .then(() => this.props.updateCallback())
         .catch((error) => {
             console.error('Error:', error);
         });
@@ -154,7 +174,6 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 <div key={index}>
                     {email}
                     <button type="button" onClick={() => this.deleteEmail(index)}>Delete</button>
-                    {/* <Button handleClick={this.deleteEmail} index={index} value={"Delete"}/> */}
                 </div>
             );
         });
@@ -166,7 +185,7 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
         ));
 
         return (
-            <div>
+            <div className="Details-pane">
                 <form onSubmit={this.handleSubmit}>
                     <label>First Name:
                         <input type="text" value={this.state.firstName} onChange={this.handleFirstName}/>
@@ -175,8 +194,6 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                         <input type="text" value={this.state.lastName} onChange={this.handleLastName}/>
                     </label>
                     
-                    <input type="submit" value="Save"/>
-                
                 <div>
                     {emails}
                 </div>
@@ -187,8 +204,11 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 </button>
                 </form>
 
-                <button type="button" onClick={this.deleteContact}>
+                <button className="Delete-button" type="button" onClick={this.deleteContact}>
                     Delete Contact
+                </button>
+                <button className="Save-button" type="button" onClick={this.handleSubmit}>
+                    Save
                 </button>
             </div>
         );
