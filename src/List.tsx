@@ -41,7 +41,7 @@ export default class List extends React.Component<ListProps> {
         })
         .map((contact: { firstName: string; lastName: string; id: number; }) => {
             return (
-                <li key={contact.id} style={{color: this.props.selected === contact.id ? 'red' : 'black' }} onClick={() => this.props.switchActive(contact.id)}>
+                <li className={this.props.selected === contact.id ? "Contact-list-item-selected" : "Contact-list-item-unselected"} key={contact.id}  onClick={() => this.props.switchActive(contact.id)}>
                     {`${contact.firstName} ${contact.lastName}`}
                 </li>
             );

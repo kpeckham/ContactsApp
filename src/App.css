@@ -1,6 +1,7 @@
 .App {
   text-align: left;
   display: table;
+  
 }
 
 .App-header {
@@ -14,14 +15,32 @@
 }
 
 .Contact-list {
-  list-style: none;
+  list-style-type: none;
   display: table-cell;
+  background-color:rgb(224, 235, 240);
+  text-align: left;
+  padding: 0;
+
+}
+
+.Contact-list-item-unselected {
+  border: none;
+  color: black;
+  padding: 5px;
+}
+
+.Contact-list-item-selected {
+  color: white;
+  background-color:rgb(62, 138, 238);
+  padding: 5px;
 }
 
 .Details-pane {
   display: table-cell;
   vertical-align: top;
   height: auto;
+  position: relative;
+  padding-left: 20px;
 
 }
 
@@ -29,10 +48,40 @@
   display: block;
 }
 
+label, input {
+  display: block;
+  
+}
+
+.Name-inputs {
+  display: table;
+  margin-bottom: 20px;
+  
+}
+
+.Name-input {
+  display: table-cell;
+  padding-right: 20px;
+  
+}
+
 .Save-button {
-  vertical-align: baseline;
+  right: 0;
+  background-color:rgb(62, 138, 238);
 }
 
 .Delete-button {
-  vertical-align: baseline;
+  left: 10;
+  background-color: rgb(247, 71, 71);
 }
+
+.Button-common {
+  position: absolute;
+  border: none;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: white;
+  bottom: 0;
+}
+

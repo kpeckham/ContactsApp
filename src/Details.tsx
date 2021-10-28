@@ -13,6 +13,7 @@ type DetailsState = {
     emails: any;
     newEmailsCounter: number;
     newEmails: any;
+    emailIsHover: any;
 }
 
 export default class Details extends React.Component<DetailsProps, DetailsState> {
@@ -25,7 +26,10 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
             emails: this.props.contact.emails,
             newEmailsCounter: 0,
             newEmails: [],
+            emailIsHover: new Array(this.props.contact.emails.length).fill(false),
         };
+
+        console.log(this.state.emailIsHover);
 
         this.handleFirstName = this.handleFirstName.bind(this);
         this.handleLastName = this.handleLastName.bind(this);
@@ -34,6 +38,20 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
         this.addEmail = this.addEmail.bind(this);
         this.deleteEmail = this.deleteEmail.bind(this);
         this.deleteContact = this.deleteContact.bind(this);
+        this.emailHover = this.emailHover.bind(this);
+    }
+
+    emailHover(isHover: boolean, index: number) {
+
+        this.setState(prevState => {
+
+            prevState.emailIsHover[index] = isHover;
+            return ({
+                emailIsHover: prevState.emailIsHover,
+            });
+        });
+
+        
     }
 
     handleFirstName(event: any) {
@@ -171,9 +189,9 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
     render() {
         const emails = this.state.emails.map((email: any, index: number) => {
             return (
-                <div key={index}>
+                <div key={index} onMouseEnter={() => this.emailHover(true, index)} onMouseLeave={() => this.emailHover(false, index)}>
                     {email}
-                    <button type="button" onClick={() => this.deleteEmail(index)}>Delete</button>
+                    {this.state.emailIsHover[index] && <button type="button" onClick={() => this.deleteEmail(index)}>Delete</button>}
                 </div>
             );
         });
@@ -187,14 +205,21 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
         return (
             <div className="Details-pane">
                 <form onSubmit={this.handleSubmit}>
-                    <label>First Name:
-                        <input type="text" value={this.state.firstName} onChange={this.handleFirstName}/>
-                    </label>
-                    <label>Last Name:
-                        <input type="text" value={this.state.lastName} onChange={this.handleLastName}/>
-                    </label>
+                    <div className="Name-inputs">
+                        <div className="Name-input">
+                            <label>First Name
+                                <input type="text" value={this.state.firstName} onChange={this.handleFirstName}/>
+                            </label>
+                        </div>
+                        <div className="Name-input">
+                            <label>Last Name
+                                <input type="text" value={this.state.lastName} onChange={this.handleLastName}/>
+                            </label>
+                        </div>
+                    </div>
                     
                 <div>
+                    <label>Email</label>
                     {emails}
                 </div>
 
@@ -204,10 +229,10 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 </button>
                 </form>
 
-                <button className="Delete-button" type="button" onClick={this.deleteContact}>
-                    Delete Contact
+                <button className="Delete-button Button-common" type="button" onClick={this.deleteContact}>
+                    Delete
                 </button>
-                <button className="Save-button" type="button" onClick={this.handleSubmit}>
+                <button className="Save-button Button-common" type="button" onClick={this.handleSubmit}>
                     Save
                 </button>
             </div>
