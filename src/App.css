@@ -1,7 +1,7 @@
 .App {
   text-align: left;
-  display: table;
-  
+  display: flex;
+  flex-direction: row;
 }
 
 .App-header {
@@ -14,42 +14,142 @@
   color: rgb(0, 0, 0);
 }
 
+.List-pane {
+  display: flex;
+  flex-direction: column;
+  background-color:rgb(224, 235, 240);
+}
+
+.Contact-header {
+  background-color:rgb(224, 235, 240);
+  display: flex;
+  flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 0;
+}
+
+.Circle-button {
+  border-radius: 50%;
+  border: none;
+  background-color: rgb(62, 138, 238);
+  vertical-align: middle;
+  font-size:x-large;
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  color: white;
+}
+
+.Email-delete-button {
+background-color: rgb(247, 71, 71);
+width: 25px;
+height: 25px;
+line-height: 25px;
+font-size: x-small;
+}
+
+.Email-delete-button div {
+  position: relative;
+  top: -1px;
+}
+
+
+.Button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 2;
+  padding-left:10px;
+}
+
+.Delete-button-container {
+  display: flex;
+  justify-content: left;
+}
+
+.Current-email {
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size:large;
+}
+
+.New-email-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  margin-top: 10px;
+  
+}
+
+.New-email {
+  display: flex;
+  flex-direction: row;
+}
+
+.New-email-text {
+  text-align: center;
+  line-height: 100%;
+  padding: 10px;
+  color:rgb(62, 138, 238);
+}
+
 .Contact-list {
   list-style-type: none;
-  display: table-cell;
   background-color:rgb(224, 235, 240);
   text-align: left;
   padding: 0;
 
 }
 
+
 .Contact-list-item-unselected {
   border: none;
   color: black;
   padding: 5px;
+  padding-left: 20px;
+  padding-right: 40px;
 }
 
 .Contact-list-item-selected {
   color: white;
   background-color:rgb(62, 138, 238);
   padding: 5px;
+  padding-left: 20px;
+  padding-right: 40px;
 }
 
 .Details-pane {
-  display: table-cell;
+  display: flex;
   vertical-align: top;
   height: auto;
   position: relative;
   padding-left: 20px;
+  margin-top: 75px;
 
 }
 
-.New-contact {
+label {
+  font-size: small;
   display: block;
+  margin-top: 10px;
 }
 
-label, input {
+input {
   display: block;
+  background-color:rgb(224, 235, 240);
+  border-color:rgb(204, 227, 238);
+  border-style: solid;
+  font-size: large;
   
 }
 
@@ -65,14 +165,19 @@ label, input {
   
 }
 
+.New-email input {
+  margin-top: 10px;
+}
 .Save-button {
   right: 0;
   background-color:rgb(62, 138, 238);
+  font-size: large;
 }
 
 .Delete-button {
   left: 10;
   background-color: rgb(247, 71, 71);
+  font-size: large;
 }
 
 .Button-common {

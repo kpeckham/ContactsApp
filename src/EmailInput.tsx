@@ -34,7 +34,7 @@ export default class EmailInput extends React.Component<EmailInputProps, EmailIn
         return (
             <div>
                 <label>
-                    New Email:
+                    New Email
                     <input type="text" value={this.state.email} onChange={this.handleEmail}/>
                 </label>
             </div>

@@ -15,7 +15,6 @@ type ContactState = {
   error: any;
   isLoaded: boolean;
   selectedId: number | null;
-  selectedContact: any;
   detailsStatus: DetailsStatus;
 }
 
@@ -31,7 +30,6 @@ class App extends React.Component<ContactProps, ContactState> {
       isLoaded: false,
       contacts: [],
       selectedId: null,
-      selectedContact: null,
       detailsStatus: DetailsStatus.Empty,
     };
 
@@ -64,7 +62,6 @@ class App extends React.Component<ContactProps, ContactState> {
   switchActive(id: number) {
     this.setState({
       selectedId: id,
-      selectedContact: this.state.contacts.find((contact: { id: number; }) => contact.id === id),
       detailsStatus: DetailsStatus.Edit,
     });
 
@@ -73,7 +70,6 @@ class App extends React.Component<ContactProps, ContactState> {
   newContact() {
     this.setState({
       selectedId: null,
-      selectedContact: null,
       detailsStatus: DetailsStatus.New,
     });
   }
@@ -99,27 +95,32 @@ class App extends React.Component<ContactProps, ContactState> {
   }
 
   render() {
-    let emptyContact = {
+    const emptyContact = {
       id: null,
       firstName: "",
       lastName: "",
       emails: [],
     }
+
+    const selectedContact = this.state.contacts.find((contact: { id: number; }) => contact.id === this.state.selectedId);
+
     return (
       <div className="App">
-        <header className="App-header">
-
-        </header>
-        <div>
-          <h1>Contacts</h1>
-          <button className="New-contact" type="button" onClick={this.newContact}>New Contact</button>
-            <List contacts={this.state.contacts} selected={this.state.selectedId} switchActive={this.switchActive}/>
-
-            {this.state.detailsStatus === DetailsStatus.Edit && <Details selected={this.state.selectedId} contact={this.state.selectedContact} updateCallback={this.updateList}/>}
-            {this.state.detailsStatus === DetailsStatus.New && <Details selected={this.state.selectedId} contact={emptyContact} updateCallback={this.updateList}/>}
-
-            
+        <div className="List-pane">
+          <div className="Contact-header">
+            <h1>Contacts</h1>
+            <div className="Button-container">
+              <div>
+                <button className="Circle-button" type="button" onClick={this.newContact}>+</button>
+              </div>
+            </div>
+          </div>
+          <List contacts={this.state.contacts} selected={this.state.selectedId} switchActive={this.switchActive}/>
         </div>
+
+        {this.state.detailsStatus === DetailsStatus.Edit && <Details selected={this.state.selectedId} contact={selectedContact} updateCallback={this.updateList}/>}
+        {this.state.detailsStatus === DetailsStatus.New && <Details selected={this.state.selectedId} contact={emptyContact} updateCallback={this.updateList}/>}
+
       </div>
     );
   }

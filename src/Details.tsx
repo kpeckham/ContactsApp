@@ -182,6 +182,9 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 firstName: this.props.contact.firstName,
                 lastName: this.props.contact.lastName,
                 emails: this.props.contact.emails,
+                newEmailsCounter: 0,
+                newEmails: [],
+                emailIsHover: new Array(this.props.contact.emails.length).fill(false),
             });
         }
     }
@@ -189,10 +192,20 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
     render() {
         const emails = this.state.emails.map((email: any, index: number) => {
             return (
-                <div key={index} onMouseEnter={() => this.emailHover(true, index)} onMouseLeave={() => this.emailHover(false, index)}>
+                <div className="Current-email" key={index} onMouseEnter={() => this.emailHover(true, index)} onMouseLeave={() => this.emailHover(false, index)}>
                     {email}
-                    {this.state.emailIsHover[index] && <button type="button" onClick={() => this.deleteEmail(index)}>Delete</button>}
+                    {this.state.emailIsHover[index] && 
+                    <div className="Button-container Delete-button-container">
+                        <div>
+                            <button className="Circle-button Email-delete-button" type="button" onClick={() => this.deleteEmail(index)}>
+                                <div>—</div>
+                            </button>                                     
+                        </div>
+                    </div>
+                    }
+                
                 </div>
+                
             );
         });
 
@@ -224,9 +237,14 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 </div>
 
                 {emailInputs}
-                <button type="button" onClick={this.addEmailInput}>
-                    New Email
-                </button>
+                
+                    <div className="Button-container New-email-container">
+                        <div className="New-email">
+                            <button className="Circle-button" type="button" onClick={this.addEmailInput}>+</button>
+                            <div className="New-email-text">add email</div>
+                            
+                        </div>
+                    </div>
                 </form>
 
                 <button className="Delete-button Button-common" type="button" onClick={this.deleteContact}>
