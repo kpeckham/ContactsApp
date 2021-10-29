@@ -1,60 +1,41 @@
-import React from 'react';
+import { Contact } from './types';
+
+function compare(a: Contact, b: Contact) {
+    let fa = a.firstName.toLowerCase() + a.lastName.toLowerCase();
+    let fb = b.firstName.toLowerCase() + b.lastName.toLowerCase();
+
+    if (fa < fb) {
+        return -1;
+    }
+    if (fa > fb) {
+        return 1;
+    }
+    return 0;
+}
 
 type ListProps = {
-    contacts: any;
+    contacts: Contact[];
     selected: number | null;
-    switchActive: (id: number) => void;
+    switchActive: (id: number | null) => void;
 }
 
-export default class List extends React.Component<ListProps> {
-    // constructor(props: any) {
-    //     super(props);
-    // }
-
-    compare(a: any,b: any) {
-        let fa = a.firstName.toLowerCase() + a.lastName.toLowerCase();
-        let fb = b.firstName.toLowerCase() + b.lastName.toLowerCase();
-
-        if (fa < fb) {
-            return -1;
-        }
-        if (fa > fb) {
-            return 1;
-        }
-        return 0;
-    }
+export const List = (props: ListProps) => {
     
-    render() {
-        if (this.props.contacts !== null) {
+    const names = props.contacts.sort(compare)
+    .map((contact) => {
         
-        const names = this.props.contacts.sort(function(a: any,b: any) {
-            let fa = a.firstName.toLowerCase() + a.lastName.toLowerCase();
-            let fb = b.firstName.toLowerCase() + b.lastName.toLowerCase();
-    
-            if (fa < fb) {
-                return -1;
-            }
-            if (fa > fb) {
-                return 1;
-            }
-            return 0;
-        })
-        .map((contact: { firstName: string; lastName: string; id: number; }) => {
-            return (
-                <li className={this.props.selected === contact.id ? "Contact-list-item-selected" : "Contact-list-item-unselected"} key={contact.id}  onClick={() => this.props.switchActive(contact.id)}>
-                    {`${contact.firstName} ${contact.lastName}`}
-                </li>
-            );
-        });
+        const className = props.selected === contact.id ? "Contact-list-item-selected" : "Contact-list-item-unselected";
         
         return (
-            <ul className="Contact-list">
-                {names}
-            </ul>
-
+            <li className={className} key={contact.id}  onClick={() => props.switchActive(contact.id)}>
+                {`${contact.firstName} ${contact.lastName}`}
+            </li>
         );
-        }
-        return ("test");
-    }
+    });
+    
+    return (
+        <ul className="Contact-list">
+            {names}
+        </ul>
+    );
 }
-

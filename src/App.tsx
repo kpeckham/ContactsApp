@@ -1,129 +1,70 @@
-import React from 'react';
-// import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import List from './List';
-import Details from './Details';
+import { List } from './List';
+import { Details } from './Details';
+import { Contact } from './types'
 
 enum DetailsStatus {
-  Empty,
-  Edit,
-  New,
+	Empty,
+	Edit,
 }
 
-type ContactState = {
-  contacts: any;
-  error: any;
-  isLoaded: boolean;
-  selectedId: number | null;
-  detailsStatus: DetailsStatus;
-}
+export const App = () => {
+	const [contacts, setContacts] = useState<Contact[]>([]);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [detailsStatus, setDetailsStatus] = useState(DetailsStatus.Empty);
 
-type ContactProps = {
+    function updateList() {
+        fetch('https://avb-contacts-api.herokuapp.com/contacts/')
+		.then(response => response.json())
+		.then((data) => {
+            setContacts(data);
+		});
+	}
+    
+    useEffect(updateList, []);
 
-}
+    function switchActive(id: number | null) {
+        setSelectedId(id);
+        setDetailsStatus(DetailsStatus.Edit);
 
-class App extends React.Component<ContactProps, ContactState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      contacts: [],
-      selectedId: null,
-      detailsStatus: DetailsStatus.Empty,
-    };
+	}
 
-    this.switchActive = this.switchActive.bind(this);
-    this.newContact = this.newContact.bind(this);
-    this.updateList = this.updateList.bind(this);
-  }
+    function newContact() {
+        setSelectedId(null);
+		setDetailsStatus(DetailsStatus.Edit);
+	}
 
-  componentDidMount() {
-    fetch('https://avb-contacts-api.herokuapp.com/contacts/')
-    .then(response => response.json())
-    .then(
-      (data) => {
-      console.log(data);
-      this.setState({
-        isLoaded: true,
-        contacts: data
-      });
+    function onDelete() {
+        setSelectedId(null);
+		setDetailsStatus(DetailsStatus.Empty);
+		updateList();
+	}
 
-      },
-      (error) => {
-        this.setState({
-          isLoaded:true,
-          error
-        });
-      }
-    )
-  }
-
-  switchActive(id: number) {
-    this.setState({
-      selectedId: id,
-      detailsStatus: DetailsStatus.Edit,
-    });
-
-  }
-
-  newContact() {
-    this.setState({
-      selectedId: null,
-      detailsStatus: DetailsStatus.New,
-    });
-  }
-
-  updateList() {
-    console.log("updating list");
-    fetch('https://avb-contacts-api.herokuapp.com/contacts/')
-    .then(response => response.json())
-    .then(
-      (data) => {
-      console.log(data);
-      this.setState({
-        contacts: data
-      });
-
-      },
-      (error) => {
-        this.setState({
-          error
-        });
-      }
-    )
-  }
-
-  render() {
     const emptyContact = {
-      id: null,
-      firstName: "",
-      lastName: "",
-      emails: [],
+        id: null,
+        firstName: "",
+        lastName: "",
+        emails: [],
     }
 
-    const selectedContact = this.state.contacts.find((contact: { id: number; }) => contact.id === this.state.selectedId);
+    const selectedContact = contacts.find(contact => contact.id === selectedId);
 
     return (
-      <div className="App">
-        <div className="List-pane">
-          <div className="Contact-header">
-            <h1>Contacts</h1>
-            <div className="Button-container">
-              <div>
-                <button className="Circle-button" type="button" onClick={this.newContact}>+</button>
-              </div>
+        <div className="App">
+            <div className="List-pane">
+                <div className="Contact-header">
+                    <h1>Contacts</h1>
+                    <div className="Button-container">
+                        <div>
+                            <button className="Circle-button" type="button" onClick={newContact}>+</button>
+                        </div>
+                    </div>
+                </div>
+                <List contacts={contacts} selected={selectedId} switchActive={switchActive}/>
             </div>
-          </div>
-          <List contacts={this.state.contacts} selected={this.state.selectedId} switchActive={this.switchActive}/>
+
+            {detailsStatus === DetailsStatus.Edit && <Details selected={selectedId} contact={selectedContact ?? emptyContact} onUpdate={updateList} onDelete={onDelete}/>}
         </div>
-
-        {this.state.detailsStatus === DetailsStatus.Edit && <Details selected={this.state.selectedId} contact={selectedContact} updateCallback={this.updateList}/>}
-        {this.state.detailsStatus === DetailsStatus.New && <Details selected={this.state.selectedId} contact={emptyContact} updateCallback={this.updateList}/>}
-
-      </div>
     );
-  }
 }
-
-export default App;

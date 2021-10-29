@@ -1,105 +1,81 @@
-import React from 'react';
-import EmailInput from './EmailInput'
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { EmailInput } from './EmailInput'
+import { Contact } from './types'
 
 type DetailsProps = {
-    contact: any;
+    contact: Contact;
     selected: number | null;
-    updateCallback: () => void;
+    onUpdate: () => void;
+    onDelete: () => void;
 }
 
-type DetailsState = {
-    firstName: string;
-    lastName: string;
-    emails: any;
-    newEmailsCounter: number;
-    newEmails: any;
-    emailIsHover: any;
-}
+export const Details = (props: DetailsProps) => {
+    const [firstName, setFirstName] = useState<string>("");
+    const [lastName, setLastName] = useState<string>("");
+    const [emails, setEmails] = useState<string[]>([]);
+    const [newEmails, setNewEmails] = useState<string[]>([]);
+    const [emailsHovered, setEmailsHovered] = useState<boolean[]>([]);
 
-export default class Details extends React.Component<DetailsProps, DetailsState> {
-    constructor(props: any) {
-        super(props);
+    useEffect(() => {
+        setFirstName(props.contact.firstName);
+        setLastName(props.contact.lastName);
+        setEmails(props.contact.emails);
+        setNewEmails([]);
+        setEmailsHovered(new Array(props.contact.emails.length).fill(false));
+    },
+    [props.contact]);
 
-        this.state = {
-            firstName: this.props.contact.firstName,
-            lastName: this.props.contact.lastName,
-            emails: this.props.contact.emails,
-            newEmailsCounter: 0,
-            newEmails: [],
-            emailIsHover: new Array(this.props.contact.emails.length).fill(false),
-        };
+    function emailHover(isHover: boolean, index: number) {
 
-        console.log(this.state.emailIsHover);
+        const updatedHovers = [...emailsHovered];
+        updatedHovers[index] = isHover;
 
-        this.handleFirstName = this.handleFirstName.bind(this);
-        this.handleLastName = this.handleLastName.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.addEmailInput = this.addEmailInput.bind(this);
-        this.addEmail = this.addEmail.bind(this);
-        this.deleteEmail = this.deleteEmail.bind(this);
-        this.deleteContact = this.deleteContact.bind(this);
-        this.emailHover = this.emailHover.bind(this);
+        setEmailsHovered(updatedHovers);        
     }
 
-    emailHover(isHover: boolean, index: number) {
-
-        this.setState(prevState => {
-
-            prevState.emailIsHover[index] = isHover;
-            return ({
-                emailIsHover: prevState.emailIsHover,
-            });
-        });
-
-        
+    function handleFirstName(event: ChangeEvent<HTMLInputElement>) {
+        setFirstName(event.target.value);
     }
 
-    handleFirstName(event: any) {
-        this.setState({
-            firstName: event.target.value,
-        });
+    function handleLastName(event: ChangeEvent<HTMLInputElement>) {
+        setLastName(event.target.value);
     }
 
-    handleLastName(event: any) {
-        this.setState({
-            lastName: event.target.value,
-        });
+    function validateEmailInput(input: string) {
+        const validate = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
+        return validate.test(input);
     }
 
-    handleSubmit() {
+    function handleSubmit() {
 
-        if (this.state.firstName === '' || this.state.lastName === '') {
+        if (firstName === '' || lastName === '') {
             alert("Please enter a first name and last name!");
-            return false;
+            return;
         }
 
-        for (const email of this.state.newEmails) {
-            if (!this.validateEmailInput(email)) {
+        for (const email of newEmails) {
+            if (!validateEmailInput(email)) {
                 alert("Please ensure all emails are of format \"email@domain.com\"");
-                return false;
+                return;
             }
         }
         
-        const filteredEmails = this.state.emails.filter((x: any) => x !== undefined);
+        const filteredEmails = emails.filter(x => x !== undefined);
         const contactData = {
-            "firstName": this.state.firstName,
-            "lastName": this.state.lastName,
-            "emails": filteredEmails.concat(this.state.newEmails),
+            "firstName": firstName,
+            "lastName": lastName,
+            "emails": filteredEmails.concat(newEmails),
         };
 
-        if (this.props.contact.id !== null) {
-            fetch('https://avb-contacts-api.herokuapp.com/contacts/' + this.props.contact.id, {
+        if (props.contact.id !== null) {
+            fetch('https://avb-contacts-api.herokuapp.com/contacts/' + props.contact.id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(contactData),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .then(() => this.props.updateCallback())
+            .then(() => props.onUpdate())
             .catch((error) => {
                 console.error('Error:', error);
             });
@@ -112,148 +88,105 @@ export default class Details extends React.Component<DetailsProps, DetailsState>
                 },
                 body: JSON.stringify(contactData),
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+            .then(() => props.onUpdate())
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        } 
+    }
+
+    function updateNewEmail(email: string, index: number) {
+        const updatedNewEmails = [...newEmails];
+        updatedNewEmails[index] = email;
+
+        setNewEmails(updatedNewEmails);
+    }
+
+    function addEmailInput() {
+        setNewEmails([...newEmails, ""]);
+    }
+
+    function deleteEmail(index: number) {
+        const updatedEmails = [...emails];
+        delete updatedEmails[index];
+
+        setEmails(updatedEmails);
+    }
+
+    function deleteContact() {
+        if (props.selected !== null) {
+            fetch('https://avb-contacts-api.herokuapp.com/contacts/' + props.contact.id, {
+                method: 'DELETE',
+                body: null,
             })
-            .then(() => this.props.updateCallback())
+            .then(() => props.onDelete())
             .catch((error) => {
                 console.error('Error:', error);
             });
         }
-        return true;
-        
     }
 
-    addEmail(email: string, index: number) {
-        this.setState(prevState => {
-            let newEmails = prevState.newEmails;
-            newEmails[index] = email;
-
-            return({
-                newEmails: newEmails,
-            });
-        });
-
-    }
-
-    addEmailInput() {
-        this.setState((prevState) => ({
-            newEmailsCounter: prevState.newEmailsCounter + 1,
-        }));
-
-    }
-
-    validateEmailInput(input: string) {
-        const validate: RegExp = new RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
-        return validate.test(input);
-    }
-
-    deleteEmail(index: number) {
-        console.log(index);
-        this.setState(prevState => {
-            console.log(prevState.emails);
-            // const deleted = prevState.emails.splice(index,1);
-            // console.log(deleted);
-            delete prevState.emails[index];
-            console.log(prevState.emails);
-            return ({
-                emails: prevState.emails,
-            });
-        });
-        console.log(this.state.emails);
-    }
-
-    deleteContact() {
-        fetch('https://avb-contacts-api.herokuapp.com/contacts/' + this.props.contact.id, {
-            method: 'DELETE',
-            body: null,
-        })
-        .then(response => console.log(response))
-        .then(() => this.props.updateCallback())
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
-    componentDidUpdate(prevProps: any) {
-        if (this.props.contact !== prevProps.contact) {
-            this.setState({
-                firstName: this.props.contact.firstName,
-                lastName: this.props.contact.lastName,
-                emails: this.props.contact.emails,
-                newEmailsCounter: 0,
-                newEmails: [],
-                emailIsHover: new Array(this.props.contact.emails.length).fill(false),
-            });
-        }
-    }
-
-    render() {
-        const emails = this.state.emails.map((email: any, index: number) => {
-            return (
-                <div className="Current-email" key={index} onMouseEnter={() => this.emailHover(true, index)} onMouseLeave={() => this.emailHover(false, index)}>
-                    {email}
-                    {this.state.emailIsHover[index] && 
-                    <div className="Button-container Delete-button-container">
-                        <div>
-                            <button className="Circle-button Email-delete-button" type="button" onClick={() => this.deleteEmail(index)}>
-                                <div>—</div>
-                            </button>                                     
-                        </div>
-                    </div>
-                    }
-                
-                </div>
-                
-            );
-        });
-
-        const emailInputs = [
-            ...Array(this.state.newEmailsCounter),
-        ].map((email: undefined, index: number) => (
-            <EmailInput key={index} index={index} addEmail={this.addEmail}/>
-        ));
-
+    const emailsDiv = emails.map((email: any, index: number) => {
         return (
-            <div className="Details-pane">
-                <form onSubmit={this.handleSubmit}>
-                    <div className="Name-inputs">
-                        <div className="Name-input">
-                            <label>First Name
-                                <input type="text" value={this.state.firstName} onChange={this.handleFirstName}/>
-                            </label>
-                        </div>
-                        <div className="Name-input">
-                            <label>Last Name
-                                <input type="text" value={this.state.lastName} onChange={this.handleLastName}/>
-                            </label>
-                        </div>
+            <div className="Current-email" key={index} onMouseEnter={() => emailHover(true, index)} onMouseLeave={() => emailHover(false, index)}>
+                {email}
+                {emailsHovered[index] && 
+                <div className="Button-container Delete-button-container">
+                    <div>
+                        <button className="Circle-button Email-delete-button" type="button" onClick={() => deleteEmail(index)}>
+                            <div>—</div>
+                        </button>                                     
                     </div>
-                    
-                <div>
-                    <label>Email</label>
-                    {emails}
                 </div>
-
-                {emailInputs}
-                
-                    <div className="Button-container New-email-container">
-                        <div className="New-email">
-                            <button className="Circle-button" type="button" onClick={this.addEmailInput}>+</button>
-                            <div className="New-email-text">add email</div>
-                            
-                        </div>
-                    </div>
-                </form>
-
-                <button className="Delete-button Button-common" type="button" onClick={this.deleteContact}>
-                    Delete
-                </button>
-                <button className="Save-button Button-common" type="button" onClick={this.handleSubmit}>
-                    Save
-                </button>
+                }
+            
             </div>
+            
         );
-    }
+    });
+
+    const emailInputs = newEmails.map((email, index) => (
+        <EmailInput key={index} index={index} addEmail={updateNewEmail}/>
+    ));
+
+    return (
+        <div className="Details-pane">
+            <form onSubmit={handleSubmit}>
+                <div className="Name-inputs">
+                    <div className="Name-input">
+                        <label>First Name
+                            <input type="text" value={firstName} onChange={handleFirstName}/>
+                        </label>
+                    </div>
+                    <div className="Name-input">
+                        <label>Last Name
+                            <input type="text" value={lastName} onChange={handleLastName}/>
+                        </label>
+                    </div>
+                </div>
+                
+            <div>
+                <label>Email</label>
+                {emailsDiv}
+            </div>
+
+            {emailInputs}
+            
+                <div className="Button-container New-email-container">
+                    <div className="New-email">
+                        <button className="Circle-button" type="button" onClick={addEmailInput}>+</button>
+                        <div className="New-email-text">add email</div>
+                        
+                    </div>
+                </div>
+            </form>
+
+            <button className="Delete-button Button-common" type="button" onClick={deleteContact}>
+                Delete
+            </button>
+            <button className="Save-button Button-common" type="button" onClick={handleSubmit}>
+                Save
+            </button>
+        </div>
+    );
 }
