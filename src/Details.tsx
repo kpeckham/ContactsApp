@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { EmailInput } from './EmailInput'
+import { DeleteButton } from './DeleteButton';
 import { Contact } from './types'
 
 type DetailsProps = {
@@ -7,6 +8,7 @@ type DetailsProps = {
     selected: number | null;
     onUpdate: () => void;
     onDelete: () => void;
+    onCancel: () => void;
 }
 
 export const Details = (props: DetailsProps) => {
@@ -14,24 +16,14 @@ export const Details = (props: DetailsProps) => {
     const [lastName, setLastName] = useState<string>("");
     const [emails, setEmails] = useState<string[]>([]);
     const [newEmails, setNewEmails] = useState<string[]>([]);
-    const [emailsHovered, setEmailsHovered] = useState<boolean[]>([]);
 
     useEffect(() => {
         setFirstName(props.contact.firstName);
         setLastName(props.contact.lastName);
         setEmails(props.contact.emails);
         setNewEmails([]);
-        setEmailsHovered(new Array(props.contact.emails.length).fill(false));
-    },
-    [props.contact]);
-
-    function emailHover(isHover: boolean, index: number) {
-
-        const updatedHovers = [...emailsHovered];
-        updatedHovers[index] = isHover;
-
-        setEmailsHovered(updatedHovers);        
-    }
+    
+    },[props.contact]);
 
     function handleFirstName(event: ChangeEvent<HTMLInputElement>) {
         setFirstName(event.target.value);
@@ -53,18 +45,21 @@ export const Details = (props: DetailsProps) => {
             return;
         }
 
-        for (const email of newEmails) {
+        const filteredNewEmails = newEmails.filter(email => email !== undefined);
+
+        for (const email of filteredNewEmails) {
             if (!validateEmailInput(email)) {
                 alert("Please ensure all emails are of format \"email@domain.com\"");
                 return;
             }
         }
         
-        const filteredEmails = emails.filter(x => x !== undefined);
+        const filteredEmails = emails.filter(email => email !== undefined);
+        
         const contactData = {
             "firstName": firstName,
             "lastName": lastName,
-            "emails": filteredEmails.concat(newEmails),
+            "emails": filteredEmails.concat(filteredNewEmails),
         };
 
         if (props.contact.id !== null) {
@@ -113,6 +108,13 @@ export const Details = (props: DetailsProps) => {
         setEmails(updatedEmails);
     }
 
+    function deleteNewEmail(index: number) {
+        const updatedEmails = [...newEmails];
+        delete updatedEmails[index];
+
+        setNewEmails(updatedEmails);
+    }
+
     function deleteContact() {
         if (props.selected !== null) {
             fetch('https://avb-contacts-api.herokuapp.com/contacts/' + props.contact.id, {
@@ -126,32 +128,35 @@ export const Details = (props: DetailsProps) => {
         }
     }
 
-    const emailsDiv = emails.map((email: any, index: number) => {
+    const emailsDiv = emails.map((email, index) => {
+        if (!email) {
+            return;
+        }
         return (
-            <div className="Current-email" key={index} onMouseEnter={() => emailHover(true, index)} onMouseLeave={() => emailHover(false, index)}>
+            <div className="Current-email" key={index}>
                 {email}
-                {emailsHovered[index] && 
-                <div className="Button-container Delete-button-container">
-                    <div>
-                        <button className="Circle-button Email-delete-button" type="button" onClick={() => deleteEmail(index)}>
-                            <div>—</div>
-                        </button>                                     
-                    </div>
-                </div>
-                }
-            
+                <DeleteButton onClick={() => deleteEmail(index)}/>
             </div>
             
         );
     });
 
-    const emailInputs = newEmails.map((email, index) => (
-        <EmailInput key={index} index={index} addEmail={updateNewEmail}/>
-    ));
+    const emailInputs = newEmails.map((email, index) => {
+        if (email === undefined) {
+            return;
+        }
+        return (
+            <div key={index} className="Current-new-email">
+                <EmailInput index={index} addEmail={updateNewEmail}/>
+                <DeleteButton onClick={() => deleteNewEmail(index)}/>
+            </div>
+        );
+    });
+
 
     return (
         <div className="Details-pane">
-            <form onSubmit={handleSubmit}>
+            <form className="Details-form" onSubmit={handleSubmit}>
                 <div className="Name-inputs">
                     <div className="Name-input">
                         <label>First Name
@@ -165,28 +170,40 @@ export const Details = (props: DetailsProps) => {
                     </div>
                 </div>
                 
-            <div>
-                <label>Email</label>
-                {emailsDiv}
-            </div>
+                <div>
+                    <label>Email</label>
+                    {emailsDiv}
+                </div>
 
-            {emailInputs}
+                {newEmails.filter(email => email !== undefined).length ? <label>New Email</label> : null}
+
+                {emailInputs}
             
                 <div className="Button-container New-email-container">
                     <div className="New-email">
                         <button className="Circle-button" type="button" onClick={addEmailInput}>+</button>
-                        <div className="New-email-text">add email</div>
+                        <div className="New-email-text" onClick={addEmailInput}>add email</div>
                         
                     </div>
                 </div>
             </form>
 
-            <button className="Delete-button Button-common" type="button" onClick={deleteContact}>
-                Delete
-            </button>
-            <button className="Save-button Button-common" type="button" onClick={handleSubmit}>
-                Save
-            </button>
+            <div className="Button-row">
+                <div className="Delete-button-container">
+                    <button className="Delete-button Button-common" type="button" onClick={deleteContact}>
+                        Delete
+                    </button>
+                </div>
+                <div className="Right-buttons">
+                    <button className="Cancel-button Button-common" type="button" onClick={props.onCancel}>
+                        Cancel
+                    </button>
+
+                    <button className="Save-button Button-common" type="button" onClick={handleSubmit}>
+                        Save
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

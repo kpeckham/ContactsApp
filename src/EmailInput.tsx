@@ -15,10 +15,7 @@ export const EmailInput = (props: EmailInputProps) => {
 
     return (
         <div>
-            <label>
-                New Email
-                <input type="text" value={email} onChange={handleEmail}/>
-            </label>
+            <input type="text" value={email} onChange={handleEmail}/>
         </div>
     );
 };

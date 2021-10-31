@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { List } from './List';
 import { Details } from './Details';
@@ -41,6 +41,11 @@ export const App = () => {
 		updateList();
 	}
 
+    function onCancel() {
+        setSelectedId(null);
+		setDetailsStatus(DetailsStatus.Empty);
+    }
+
     const emptyContact = {
         id: null,
         firstName: "",
@@ -64,7 +69,7 @@ export const App = () => {
                 <List contacts={contacts} selected={selectedId} switchActive={switchActive}/>
             </div>
 
-            {detailsStatus === DetailsStatus.Edit && <Details selected={selectedId} contact={selectedContact ?? emptyContact} onUpdate={updateList} onDelete={onDelete}/>}
+            {detailsStatus === DetailsStatus.Edit && <Details selected={selectedId} contact={selectedContact ?? emptyContact} onUpdate={updateList} onDelete={onDelete} onCancel={onCancel}/>}
         </div>
     );
 }
