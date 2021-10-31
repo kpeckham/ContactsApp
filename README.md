@@ -1,6 +1,6 @@
 # React Contacts App
 
-This project is a simple CRUD contacts app developed using React.
+This project is a simple CRUD contacts app developed using React and TypeScript.
 
 To see the current production deployment, please visit https://karlypeckham.com/contacts.
 
