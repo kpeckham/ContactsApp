@@ -14,11 +14,14 @@ export const App = () => {
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [detailsStatus, setDetailsStatus] = useState(DetailsStatus.Empty);
 
-    function updateList() {
+    function updateList(id?: number) {
         fetch('https://avb-contacts-api.herokuapp.com/contacts/')
             .then((response) => response.json())
             .then((data) => {
                 setContacts(data);
+                if (id) {
+                    setSelectedId(id);
+                }
             });
     }
 

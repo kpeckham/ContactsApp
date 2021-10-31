@@ -6,7 +6,7 @@ import { Contact } from './types';
 type DetailsProps = {
     contact: Contact;
     selected: number | null;
-    onUpdate: () => void;
+    onUpdate: (id?: number) => void;
     onDelete: () => void;
     onCancel: () => void;
 };
@@ -88,7 +88,8 @@ export const Details = (props: DetailsProps) => {
                 },
                 body: JSON.stringify(contactData),
             })
-                .then(() => props.onUpdate())
+                .then((response) => response.json())
+                .then((response) => props.onUpdate(response.id))
                 .catch((error) => {
                     console.error('Error:', error);
                 });
@@ -139,7 +140,7 @@ export const Details = (props: DetailsProps) => {
 
     const emailsDiv = emails.map((email, index) => {
         if (!email) {
-            return;
+            return null;
         }
         return (
             <div className="Current-email" key={index}>
@@ -151,7 +152,7 @@ export const Details = (props: DetailsProps) => {
 
     const emailInputs = newEmails.map((email, index) => {
         if (email === undefined) {
-            return;
+            return null;
         }
         return (
             <div key={index} className="Current-new-email">
