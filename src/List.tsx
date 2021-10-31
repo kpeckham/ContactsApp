@@ -17,25 +17,24 @@ type ListProps = {
     contacts: Contact[];
     selected: number | null;
     switchActive: (id: number | null) => void;
-}
+};
 
 export const List = (props: ListProps) => {
-    
-    const names = props.contacts.sort(compare)
-    .map((contact) => {
-        
-        const className = props.selected === contact.id ? "Contact-list-item-selected" : "Contact-list-item-unselected";
-        
+    const names = props.contacts.sort(compare).map((contact) => {
+        const className =
+            props.selected === contact.id
+                ? 'Contact-list-item-selected'
+                : 'Contact-list-item-unselected';
+
         return (
-            <li className={className} key={contact.id}  onClick={() => props.switchActive(contact.id)}>
+            <li
+                className={className}
+                key={contact.id}
+                onClick={() => props.switchActive(contact.id)}>
                 {`${contact.firstName} ${contact.lastName}`}
             </li>
         );
     });
-    
-    return (
-        <ul className="Contact-list">
-            {names}
-        </ul>
-    );
-}
+
+    return <ul className="Contact-list">{names}</ul>;
+};

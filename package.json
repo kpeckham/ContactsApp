@@ -23,12 +23,26 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy-production": "react-scripts build && scp -r ./build/* root@karlypeckham.com:/var/www/karlypeckham.com/html/contacts"
+    "deploy-production": "react-scripts build && scp -r ./build/* root@karlypeckham.com:/var/www/karlypeckham.com/html/contacts",
+    "format": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "bracketSameLine": true,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "package.json",
+        "options": {
+          "tabWidth": 2
+        }
+      }
     ]
   },
   "browserslist": {
@@ -44,8 +58,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.2"
+    "@types/react-router-dom": "^5.3.2",
+    "prettier": "^2.4.1"
   },
-
   "homepage": "/contacts/"
 }

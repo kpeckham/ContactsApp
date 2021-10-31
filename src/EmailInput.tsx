@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from 'react';
 type EmailInputProps = {
     addEmail: (email: string, index: number) => void;
     index: number;
-}
+};
 
 export const EmailInput = (props: EmailInputProps) => {
     const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ export const EmailInput = (props: EmailInputProps) => {
 
     return (
         <div>
-            <input type="text" value={email} onChange={handleEmail}/>
+            <input type="text" value={email} onChange={handleEmail} />
         </div>
     );
 };

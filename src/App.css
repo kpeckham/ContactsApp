@@ -1,54 +1,54 @@
 .App {
-  text-align: left;
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  width: 100vw;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
 }
 
 .App-header {
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
-  font-size: calc(10px + 2vmin);
-  color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+    font-size: calc(10px + 2vmin);
+    color: rgb(0, 0, 0);
 }
 
 .List-pane {
-  display: flex;
-  flex-direction: column;
-  background-color:rgb(224, 235, 240);
-  height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(224, 235, 240);
+    height: 100vh;
 }
 
 .Contact-header {
-  background-color:rgb(224, 235, 240);
-  display: flex;
-  flex-direction: row;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+    background-color: rgb(224, 235, 240);
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 h1 {
-  margin: 0;
+    margin: 0;
 }
 
 .Circle-button {
-  border-radius: 50%;
-  border: none;
-  background-color: rgb(62, 138, 238);
-  vertical-align: middle;
-  font-size:x-large;
-  width: 35px;
-  height: 35px;
-  text-align: center;
-  line-height: 35px;
-  color: white;
-  cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    background-color: rgb(62, 138, 238);
+    vertical-align: middle;
+    font-size: x-large;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    color: white;
+    cursor: pointer;
 }
 
 .Circle-button:hover {
@@ -56,61 +56,60 @@ h1 {
 }
 
 .Email-delete-button {
-background-color: rgb(247, 71, 71);
-width: 25px;
-height: 25px;
-line-height: 25px;
-font-size: x-small;
-visibility: hidden;
+    background-color: rgb(247, 71, 71);
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    font-size: x-small;
+    visibility: hidden;
 }
 
 .Email-delete-button div {
-  position: relative;
-  top: -1px;
+    position: relative;
+    top: -1px;
 }
 
-
 .Button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 2;
-  padding-left:10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 2;
+    padding-left: 10px;
 }
 
 .Delete-button-container {
-  display: flex;
-  justify-content: left;
+    display: flex;
+    justify-content: left;
 }
 
 .Current-email {
-  display: flex;
-  flex-direction: row;
-  height: 25px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  font-size:large;
+    display: flex;
+    flex-direction: row;
+    height: 25px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: large;
 }
 
-.Current-email:hover .Email-delete-button, .Current-new-email:hover .Email-delete-button {
+.Current-email:hover .Email-delete-button,
+.Current-new-email:hover .Email-delete-button {
     visibility: visible;
 }
 
 .New-email-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  margin-top: 10px;
-  
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin-top: 10px;
 }
 
 .New-email {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .New-email:hover {
-    filter:brightness(80%);
+    filter: brightness(80%);
 }
 
 .New-email > .Circle-button {
@@ -125,22 +124,21 @@ visibility: hidden;
 }
 
 .New-email-text {
-  text-align: center;
-  line-height: 100%;
-  padding: 10px;
-  color:rgb(62, 138, 238);
-  font-size:large;
-  cursor: pointer;
+    text-align: center;
+    line-height: 100%;
+    padding: 10px;
+    color: rgb(62, 138, 238);
+    font-size: large;
+    cursor: pointer;
 }
 
 .Contact-list {
-  list-style-type: none;
-  background-color:rgb(224, 235, 240);
-  text-align: left;
-  padding: 0;
-  overflow: hidden; 
-  height: 100%;
-
+    list-style-type: none;
+    background-color: rgb(224, 235, 240);
+    text-align: left;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
 }
 
 .Contact-list:hover {
@@ -148,31 +146,31 @@ visibility: hidden;
 }
 
 .Contact-list-item-unselected {
-  border: none;
-  color: black;
-  padding: 5px;
-  padding-left: 20px;
-  padding-right: 40px;
+    border: none;
+    color: black;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 40px;
 }
 
 .Contact-list-item-selected {
-  color: white;
-  background-color:rgb(62, 138, 238);
-  padding: 5px;
-  padding-left: 20px;
-  padding-right: 40px;
+    color: white;
+    background-color: rgb(62, 138, 238);
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 40px;
 }
 
 .Details-pane {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 4;
-  vertical-align: top;
-  height: auto;
-  position: relative;
-  padding-left: 20px;
-  margin-top: 75px;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 4;
+    vertical-align: top;
+    height: auto;
+    position: relative;
+    padding-left: 20px;
+    margin-top: 75px;
+    justify-content: space-between;
 }
 
 .Details-form {
@@ -182,12 +180,12 @@ visibility: hidden;
 
 .Details-form::-webkit-scrollbar {
     display: none;
-  }
-  
-  .Details-form {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
+}
+
+.Details-form {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
 
 .Button-row {
     display: flex;
@@ -196,62 +194,59 @@ visibility: hidden;
 }
 
 label {
-  font-size: small;
-  display: block;
-  margin-top: 10px;
+    font-size: small;
+    display: block;
+    margin-top: 10px;
 }
 
 input {
-  display: block;
-  background-color:rgb(224, 235, 240);
-  border-color:rgb(204, 227, 238);
-  border-style: solid;
-  font-size: large;
-  
+    display: block;
+    background-color: rgb(224, 235, 240);
+    border-color: rgb(204, 227, 238);
+    border-style: solid;
+    font-size: large;
 }
 
 .Name-inputs {
-  display: table;
-  margin-bottom: 20px;
-  
+    display: table;
+    margin-bottom: 20px;
 }
 
 .Name-input {
-  display: table-cell;
-  padding-right: 20px;
-  
+    display: table-cell;
+    padding-right: 20px;
 }
 
 .New-email input {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 .Save-button {
-  background-color:rgb(62, 138, 238);
-  font-size: large;
-  color: white;
-  border: none;
+    background-color: rgb(62, 138, 238);
+    font-size: large;
+    color: white;
+    border: none;
 }
 
 .Cancel-button {
-  border-color:rgb(62, 138, 238);
-  border-style: solid;
-  font-size: large;
-  margin-right: 20px;
-  background-color:rgb(224, 235, 240);
+    border-color: rgb(62, 138, 238);
+    border-style: solid;
+    font-size: large;
+    margin-right: 20px;
+    background-color: rgb(224, 235, 240);
 }
 
 .Right-buttons {
-  display: flex;
-  flex-direction: row;
-  margin: 20px;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
 }
 
 .Delete-button {
-  background-color: rgb(247, 71, 71);
-  font-size: large;
-  color: white;
-  border: solid;
-  border-color:rgb(247, 71, 71);
+    background-color: rgb(247, 71, 71);
+    font-size: large;
+    color: white;
+    border: solid;
+    border-color: rgb(247, 71, 71);
 }
 
 .Delete-button-container {
@@ -260,13 +255,12 @@ input {
 }
 
 .Button-common {
-  padding: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
-  cursor:pointer;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
 }
 
 .Button-common:hover {
-  filter: brightness(80%);
+    filter: brightness(80%);
 }
-
